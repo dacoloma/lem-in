@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "gnl.h"
+#include "libft.h"
 
 static int	ft_get_elem_content(char *content, int fd, t_gnl **list)
 {
