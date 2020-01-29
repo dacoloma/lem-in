@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "gnl.h"
+#include "libft.h"
 
 static int		ft_is_valid(const int fd, char **line)
 {
