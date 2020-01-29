@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "gnl.h"
+#include "libft.h"
 
 char		*ft_strncat_gnl(char *s1, const char *s2, int len)
 {
