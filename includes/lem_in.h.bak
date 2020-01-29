@@ -1,0 +1,86 @@
+#ifndef LEM_IN_H
+# define LEM_IN_H
+
+# include "../libft/includes/libft.h"
+# include <SDL.h>
+# include <math.h>
+
+# define WIDTH 1000
+# define HEIGHT 1000
+
+typedef struct		s_texture
+{
+	Uint32			*content;
+	SDL_Texture		*texture;
+	Uint32			color_tmp;
+}					t_texture;
+
+typedef struct s_link // lien
+{
+	int				room_number;//nombre dans le tableau de hach
+	int				flow;
+	struct s_link	*next;
+} t_link;
+
+typedef struct s_r // room
+{
+	char				*name;
+	long				key; //key de hashing
+	t_link				*links;
+	t_vec2				pos;
+	int					visited; // 0 non 1 oui child 2 oui bfs
+	struct s_r			*next;
+} t_room;
+
+typedef struct s_numbers // chemin
+{
+	int				nb;
+	struct s_numbers *next;
+} t_numbers;
+
+typedef struct s_path // chemin
+{
+	t_numbers		*numbers;
+	struct s_path	*next;
+} t_path;
+
+typedef struct		s_l
+{
+	SDL_Window		*window;
+	SDL_Renderer	*renderer;
+	t_texture		*tex;
+	SDL_Event		event;
+	t_room			*rooms;//list chaine de rooms
+	int				nb_ants;//nombres de fourmis
+	int				nb_rooms;//nombre salles
+	int				nb_rooms_check;
+	int				stage;
+	int				nb_paths;
+	char			*start;
+	char			*end;
+	t_room			**table;//tableau de hach de rooms
+	t_room			**pile;
+	t_path			*allpaths;
+	t_path			*paths;
+}						t_l;
+
+
+
+t_l					read_stdin(t_l *l);
+t_l					init(t_l *l);
+void				ft_exit(t_l *l, int error);
+void				ft_exit_sdl(t_l *l);
+void				initialize_sdl(t_l *l);
+void				update_image(t_l *l, t_texture *tex);
+void				set_pixel(t_texture *text, Uint32 color, t_vec2 coord);
+t_texture			black(t_texture tex);
+t_l					render(t_l *l);
+int					check_fill_links(t_l *l, char *line);
+int					check_fill_rooms(t_l *l, char **split, int mode, int start);
+void				free_split(char **split);
+void   				hach_table(t_l *l);
+void  				find_paths(t_l *l, int i);
+void 				max_paths(t_l *l, int start, int end);
+int 			    search_table(t_room **table, char *name, int size);//trouve l'index dans le tableau **table de la room "name"
+t_path				do_you_know_the_way(t_l *l, int i);
+#endif

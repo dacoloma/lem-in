@@ -14,11 +14,11 @@ NAME = libft.a
 
 INCLUDES = includes
 
-HEADER = includes/libft.h includes/ft_printf.h
+HEADER = includes/libft.h
 
 CC = gcc
 
-CFLAGS = -Wall -Wextra -Werror -I $(INCLUDES)
+CFLAGS = -g3 -Wall -Wextra -Werror
 
 vpath %c condition conv gnl ft_printf lst mem print str 
 
@@ -118,30 +118,34 @@ SRC =	ft_format.c \
 		ft_swap.c \
 		ft_elem.c \
 		ft_tabjoin.c\
+		ft_strncat_gnl.c\
+		ft_strnjoin.c\
+		ft_strndup.c\
 		get_next_line.c
 
 DIR_OBJ = obj
 
 OBJ = $(SRC:%.c=$(DIR_OBJ)/%.o)
 
-$(NAME): $(DIR_OBJ) $(HEADER) $(SRC) $(OBJ)
-	@ar rc $(NAME) $(OBJ)
-	ranlib $(NAME)
 .PHONY = all clean fclean re
+
+all: $(NAME) $(OBJ)
 
 $(DIR_OBJ): 
 	mkdir -p $(DIR_OBJ)
 
-$(DIR_OBJ)/%.o: %.c
-	$(CC) $(CFLAGS) -o $@ -c $<
+$(DIR_OBJ)/%.o: %.c $(HEADER)
+	@$(CC) $(CFLAGS) -o $@ -c $< -I $(INCLUDES)
 
-all: $(NAME) $(OBJ)
+$(NAME): $(DIR_OBJ) $(HEADER) $(SRC) $(OBJ)
+	@ar rc $(NAME) $(OBJ)
+	ranlib $(NAME)
 
 clean:
-	@rm -f $(OBJ)
+	@$(RM) $(OBJ)
 
 fclean: clean
-	rm -f $(NAME)
-	rm -rf $(DIR_OBJ)
+	$(RM) $(NAME)
+	$(RM) -r $(DIR_OBJ)
 
 re: fclean all

@@ -1,54 +1,66 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: dcoloma <marvin@42.fr>                     +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2019/03/26 11:38:55 by dcoloma           #+#    #+#              #
-#    Updated: 2019/10/30 13:37:43 by dcoloma          ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
 NAME = lem-in
-
-HEADER = libft/includes
-
-LIBFT = libft/libft.a
 
 CC = gcc
 
-CF = -Wall -Wextra -Werror -I $(HEADER)
+CFLAGS = -g3 -Wall -Wextra -Werror
 
-SRC =	ft_init.c\
-		ft_free.c
+CPPFLAGS = -I libft/includes/ -I /usr/local/include/ -MMD
 
-DIR_OBJ = obj_lem_in
+LDFLAGS = -L libft/ -lft  -L /usr/local/include/
 
-OBJ = $(SRC:%.c=$(DIR_OBJ)/%.o)
+INC = libft/includes
 
-.PHONY = all clean fclean re
+LIBFT = libft/libft.a
 
-all: $(LIBFT) $(DIR_OBJ) $(NAME) $(SRC) $(OBJ)
+HEADER_PATH = includes
 
-$(DIR_OBJ): 
-	mkdir -p $(DIR_OBJ)
+HEADER = includes/lem_in.h
 
-$(LIBFT) :
-	make -C libft/
+SDLINCL = -I $(HOME)/.brew/Cellar/sdl2/2.0.10/include/SDL2
 
-$(DIR_OBJ)/%.o: %.c
-	$(CC) $(CF) -o $@ -c $< 
+SDLFLAGS =  $(SDLINCL) -L $(HOME)/.brew/Cellar/sdl2/2.0.10/lib -lSDL2
 
-$(NAME) : $(LIBFT) $(OBJ) main.c
-	$(CC) $(CF) -o $(NAME) main.c -g $(OBJ) -L libft/ -lft
+vpath %c src
+
+#SRC_PATH = src
+
+SRC =	add_edge.c\
+		bfs.c\
+		create_graph.c\
+		create_room.c\
+		create_queue.c\
+		main.c
+
+OBJ_PATH = obj_lem_in
+
+OBJ = $(SRC:%.c=$(OBJ_PATH)/%.o)
+
+.PHONY = all clean fclean re FORCE
+
+all: $(OBJ_PATH) $(NAME)
+
+$(OBJ_PATH):
+	mkdir -p $(OBJ_PATH)
+
+$(LIBFT) : FORCE
+	$(MAKE) -C libft/
+
+FORCE:
+
+$(OBJ_PATH)/%.o: %.c $(HEADER)
+	$(CC) $(CFLAGS) $(CPPFLAGS) -o $@ -c $< -I $(HEADER_PATH) $(SDLINCL) -I $(INC)
+
+$(NAME) : $(LIBFT) $(OBJ) $(HEADER) $(SRC)
+	$(CC) $(CFLAGS) $(LDFLAGS) $(SDLFLAGS) -o $(NAME) $(OBJ) -L libft/ -lft -I $(HEADER_PATH) -I $(INC)
 
 clean:
-	make clean -C libft/
-	rm -rf $(DIR_OBJ)
+	$(MAKE) clean -C libft/
+	$(RM) -r $(OBJ_PATH)
 
 fclean: clean
-	rm -f $(NAME) 
-	make -C libft/ fclean
+	$(RM) $(NAME)
+	$(MAKE) -C libft/ fclean
 
 re: fclean all
+
+-include $(OBJ:.o=.d)
