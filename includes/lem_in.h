@@ -27,6 +27,7 @@ typedef struct		s_graph
 	int		*visited;
 	t_room	**adjList;
 	int		num_vertices;
+	int		**cost;
 }					t_graph;
 
 t_graph				*create_graph(int vertices);

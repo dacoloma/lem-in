@@ -1,6 +1,6 @@
 #include "lem_in.h"
-
-void	print_graph(t_graph *graph, int vertices)
+/*
+static void	print_graph(t_graph *graph, int vertices)
 {
 	int	i;
 	t_room	*room;
@@ -21,7 +21,31 @@ void	print_graph(t_graph *graph, int vertices)
 		i++;
 	}
 }
+*/
+static void	print_cost(t_graph *graph)
+{
+	int	vertices;
+	int	**cost;
+	int	i;
+	int	j;
 
+	vertices = graph->num_vertices;
+	cost = graph->cost;
+	i = 0;
+	while (i < vertices)
+		ft_printf("\t% d", i++);
+	ft_putchar('\n');
+	i = 0;
+	while (i < vertices)
+	{
+		ft_printf("% d\t", i);
+		j = 0;
+		while (j < vertices)
+			ft_printf("%d\t", graph->cost[i][j++]);
+		ft_putchar('\n');
+		i++;
+	}
+}
 
 /*
               3
@@ -48,9 +72,9 @@ int		main(void)
     add_edge(graph, 2, 4);
     add_edge(graph, 3, 4);
 
-
-	print_graph(graph, vertices);
-	bfs(graph, 0);
+	print_cost(graph);
+	// print_graph(graph, vertices);
+	// bfs(graph, 0);
 
 	return (0);
 }
