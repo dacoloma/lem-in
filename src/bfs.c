@@ -2,37 +2,28 @@
 
 void	bfs(t_graph *graph, int start)
 {
-	struct queue* q = createQueue();
+	t_queue	*queue;
+	int		currentVertex;
+	t_room	*tmp;
+	int		adjVertex;
+
+	queue = create_queue();
+	graph->visited[start] = 1;
+	enqueue(queue, start);
+	while (is_empty(queue) == NOT_EMPTY)
+	{
+		print_queue(queue);
+		currentVertex = dequeue(queue);
+        ft_printf("\nVisited %d\n", currentVertex);
+		tmp = graph->adjList[currentVertex];
     
-    graph->visited[startVertex] = 1;
-    enqueue(q, startVertex);
-    
-    while(!isEmpty(q)){
-        printQueue(q);
-        int currentVertex = dequeue(q);
-        printf("Visited %d\n", currentVertex);
-    
-       struct node* temp = graph->adjLists[currentVertex];
-    
-       while(temp) {
-            int adjVertex = temp->vertex;
+       while (tmp != NULL) {
+            adjVertex = tmp->vertex;
             if(graph->visited[adjVertex] == 0){
                 graph->visited[adjVertex] = 1;
-                enqueue(q, adjVertex);
+                enqueue(queue, adjVertex);
             }
-            temp = temp->next;
+            tmp = tmp->next;
        }
     }
-
-
-	t_queue	*queue;
-
-	q = create_queue();
-
-
-
-
-
-
-
 }

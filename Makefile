@@ -29,6 +29,10 @@ SRC =	add_edge.c\
 		create_graph.c\
 		create_room.c\
 		create_queue.c\
+		enqueue.c\
+		dequeue.c\
+		is_empty.c\
+		print_queue.c\
 		main.c
 
 OBJ_PATH = obj_lem_in
