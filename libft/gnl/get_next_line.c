@@ -10,22 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-
-static t_gnl	*ft_get_elem(t_gnl **head, const int fd)
-{
-	t_gnl	*elem;
-
-	elem = *head;
-	while (elem && elem->fd != fd)
-		elem = elem->next;
-	if (elem == NULL)
-	{
-		elem = ft_new_elem(NULL, fd);
-		ft_add_elem(head, elem);
-	}
-	return (elem);
-}
+#include "gnl.h"
 
 static int		ft_is_valid(const int fd, char **line)
 {
@@ -35,7 +20,7 @@ static int		ft_is_valid(const int fd, char **line)
 					|| BUFF_SIZE < 1)));
 }
 
-static void		ft_get_line(char *tmp, char **line, t_gnl *elem)
+static int		ft_get_line(char *tmp, char **line, t_gnl *elem)
 {
 	int	i;
 
@@ -43,35 +28,78 @@ static void		ft_get_line(char *tmp, char **line, t_gnl *elem)
 	while (tmp[i] && tmp[i] != '\n')
 		i++;
 	*line = ft_strsub(tmp, 0, i);
+	if (*line == NULL)
+		return (GNL_ERROR);
 	elem->content = (tmp[i] == '\n') ? ft_strdup(tmp + i + 1) : NULL;
-	free(tmp);
+	ft_strdel(&tmp);
+	return (GNL_READ);
+}
+
+static int		ft_has_new_line(char *buf, int len)
+{
+	int	i;
+
+	i = 0;
+	while (i < len)
+	{
+		if (buf[i] == '\n')
+			return (VALID);
+		i++;
+	}
+	return (INVALID);
+}
+
+static int		ft_get_content(const int fd, t_gnl *elem, char **tmp)
+{
+	int				ret;
+	char			buf[BUFF_SIZE + 1];
+
+	while ((ret = read(fd, buf, BUFF_SIZE)))
+	{
+		if (ret == -1)
+			return (GNL_ERROR);
+		buf[ret] = '\0';
+		if ((int)ft_strlen(buf) != ret)
+			return (GNL_ERROR);
+		if (*tmp == NULL)
+			*tmp = ft_strndup(buf, ret);
+		else
+			*tmp = ft_strnjoin(elem->content, buf, ret);
+		ft_strdel(&elem->content);
+		if (*tmp == NULL)
+			return (GNL_ERROR);
+		elem->content = *tmp;
+		if (ft_has_new_line(buf, ret) == VALID)
+			break ;
+	}
+	return (ret);
 }
 
 int				get_next_line(const int fd, char **line)
 {
 	static t_gnl	*head = NULL;
 	t_gnl			*elem;
-	char			*tmp;
 	int				ret;
-	char			buf[BUFF_SIZE + 1];
 
 	if (!ft_is_valid(fd, line))
-		return (-1);
-	elem = ft_get_elem(&head, fd);
-	tmp = elem->content;
-	while ((ret = read(fd, buf, BUFF_SIZE)))
 	{
-		if (ret == -1)
-			return (-1);
-		buf[ret] = '\0';
-		tmp = (*tmp == '\0') ? ft_strdup(buf) : ft_strjoin(elem->content, buf);
-		free(elem->content);
-		elem->content = tmp;
-		if (ft_strchr(buf, '\n'))
-			break ;
+		ft_del_elem(&head);
+		return (GNL_ERROR);
 	}
-	if ((ret == 0 && !elem->content) || *tmp == '\0')
-		return (0);
-	ft_get_line(tmp, line, elem);
-	return (1);
+	elem = ft_get_elem(&head, fd);
+	if (elem == NULL)
+		return (GNL_ERROR);
+	if (elem->content != NULL)
+		elem->tmp = elem->content;
+	ret = ft_get_content(fd, elem, &elem->tmp);
+	if (ret == GNL_ERROR)
+		return (GNL_ERROR);
+	if ((ret == 0 && !elem->content) || *(elem->tmp) == '\0')
+	{
+		ft_del_elem(&(elem));
+		return (GNL_EOF);
+	}
+	if (ft_get_line(elem->tmp, line, elem) == GNL_ERROR)
+		return (GNL_ERROR);
+	return (GNL_READ);
 }
