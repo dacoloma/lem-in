@@ -30,6 +30,18 @@ typedef struct	s_list
 	size_t			content_size;
 	struct s_list	*next;
 }				t_list;
+typedef struct		s_vec3
+{
+	int				x;
+	int				y;
+	int				z;
+}					t_vec3;
+
+typedef struct		s_vec2
+{
+	int				x;
+	int				y;
+}					t_vec2;
 int				ft_atoi(const char *str);
 long long		ft_atol(const char *str);
 void			ft_bzero(void *s, size_t n);
