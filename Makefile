@@ -33,7 +33,14 @@ SRC =	add_edge.c\
 		dequeue.c\
 		is_empty.c\
 		print_queue.c\
+		edmonds_karp.c\
 		main.c
+		# sdl.c\
+		# check_rooms.c\
+		# hach.c\
+		# check_links.c\
+		# max_paths.c\
+		# visu.c\
 
 OBJ_PATH = obj_lem_in
 
