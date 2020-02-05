@@ -116,65 +116,6 @@ void	ft_exit(t_graph *graph, int error)
 	ft_exit_sdl(graph);
 }
 
-void	print_path(t_graph *graph)
-{
-	// int	*path;
-	// int	tmp;
-	// int	i;
-
-	// i = 0;
-	// ft_printf("DISTANCE : ");
-	// while (i < graph->num_vertices)
-	// {
-	// 	ft_printf("%d ", graph->distance[i++]);
-	// }
-	// i = 0;
-	// ft_printf("\nPARENT : ");
-	// while (i < graph->num_vertices)
-	// {
-	// 	ft_printf("%d ", graph->parent[i++]);
-	// }
-	// ft_printf("\n");
-
-	int	tmp;
-	int	*path;
-	int	i;
-	int	len;
-
-	tmp = graph->dest;
-	len = 0;
-	while (graph->parent[tmp] != -1)
-	{
-		len++;
-		tmp = graph->parent[tmp];
-	}
-	if (len == 0)
-		return ;
-	path = (int *)malloc(sizeof(int) * len);
-	if (path == NULL)
-		return ;
-	i = 0;
-	tmp = graph->dest;
-	while (graph->parent[tmp] != -1)
-	{
-		path[i] = tmp;
-		i++;
-		tmp = graph->parent[tmp];
-	}
-	ft_printf("tmp = %d\n", tmp);
-	path[i] = tmp;
-	i = len;
-	ft_printf("\nPATH : ");
-	while (i >= 0)
-	{
-		ft_printf("%d ", path[i]);
-		i--;
-	}
-	
-	ft_printf("\n");
-	free(path);
-}
-
 /*
               3
             / |
@@ -222,7 +163,7 @@ int		main(void)
 	start = 0;
 	end = 3;
 	// bfs(graph, start, end);
-	print_path(graph);
+	// print_path(graph);
 	max_flow = edmonds_karp(graph, start, end);
 	ft_printf("max flow = %d\n", max_flow);
 	return (0);

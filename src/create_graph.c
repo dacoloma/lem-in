@@ -42,7 +42,7 @@ t_graph	*create_graph(int vertices)
 		j = 0;
 		while (j < vertices)
 		{
-			graph->cost[i][j] = 0;
+			graph->cost[i][j] = 1;
 			graph->flow_passed[i][j] = 0;
 			j++;
 		}

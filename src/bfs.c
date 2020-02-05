@@ -37,10 +37,10 @@ int	bfs(t_graph *graph, int start, int dest)
 	// graph->distance[start] = 0;
 	while (is_empty(queue) == NOT_EMPTY)
 	{
-		print_queue(queue);
+		// print_queue(queue);
 		// Get first element in queue 
 		current = dequeue(queue);
-		ft_printf("\nVisited %d\n", current);
+		// ft_printf("\nVisited %d\n", current);
 
 		// Get list of adjacent of current node
 		tmp = graph->adjList[current];
@@ -53,18 +53,17 @@ int	bfs(t_graph *graph, int start, int dest)
 			// If node not visited and doesn't have a parent yet
 			if(graph->parent[adjVertex] == -1)
 			{
-				ft_printf("cost[%d][%d] = %d\n", current, tmp->index, graph->cost[current][tmp->index]);
-				ft_printf("flow[%d][%d] = %d\n", current, tmp->index, graph->flow_passed[current][tmp->index]);
+				// ft_printf("cost[%d][%d] = %d\n", current, tmp->index, graph->cost[current][tmp->index]);
+				// ft_printf("flow[%d][%d] = %d\n", current, tmp->index, graph->flow_passed[current][tmp->index]);
 				if (graph->cost[current][tmp->index] - graph->flow_passed[current][tmp->index] > 0)
 				{
-			ft_printf("\nparent[%d] = %d\n", adjVertex, graph->parent[adjVertex]);
+			// ft_printf("\nparent[%d] = %d\n", adjVertex, graph->parent[adjVertex]);
 					// Set node as visited by setting a parent
 					graph->parent[adjVertex] = current;
 					// graph->visited[adjVertex] = 1;
 					// graph->distance[adjVertex] = graph->distance[current] + 1;
 					graph->distance[adjVertex] = get_min(graph->distance[current],
 						graph->cost[current][adjVertex] - graph->flow_passed[current][tmp->index]);
-					graph->parent[adjVertex] = current;
 					if (adjVertex == dest)
 						return (graph->distance[dest]);
 					enqueue(queue, adjVertex);
